@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/olekukonko/tablewriter"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -47,8 +47,10 @@ var checkCmd = &cobra.Command{
 		}
 
 		// Create table
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetHeader([]string{"Station", "Mechanical", "E-bike", "Docks", "Last Update"})
+		t := table.NewWriter()
+		t.SetStyle(table.StyleRounded)
+		t.SetOutputMirror(os.Stdout)
+		t.AppendHeader(table.Row{"Station", "Mechanical", "E-bike", "Docks", "Last Update"})
 
 		for _, station := range config.Stations {
 			if status, ok := statusMap[station.StationCode]; ok {
@@ -56,17 +58,17 @@ var checkCmd = &cobra.Command{
 				ebike := status.NumBikesAvailableTypes[1].Ebike
 				lastReported := time.Since(time.Unix(status.LastReported, 0)).Round(time.Minute)
 
-				table.Append([]string{
+				t.AppendRow(table.Row{
 					station.Name,
-					fmt.Sprintf("%d", mechanical),
-					fmt.Sprintf("%d", ebike),
-					fmt.Sprintf("%d", status.NumDocksAvailable),
+					mechanical,
+					ebike,
+					status.NumDocksAvailable,
 					lastReported.String(),
 				})
 			}
 		}
 
-		table.Render()
+		t.Render()
 		return nil
 	},
 }
