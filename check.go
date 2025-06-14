@@ -22,7 +22,7 @@ var checkCmd = &cobra.Command{
 		var config Config
 		data, err := os.ReadFile(configPath)
 		if err != nil {
-			return fmt.Errorf("no stations saved, use search command first")
+			return fmt.Errorf("no stations saved, use 'velispo stations add' command first")
 		}
 		if err := yaml.Unmarshal(data, &config); err != nil {
 			return err

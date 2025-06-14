@@ -18,7 +18,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(searchCmd)
+	rootCmd.AddCommand(stationsCmd)
 	rootCmd.AddCommand(checkCmd)
 }
 
