@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 )
@@ -58,11 +59,27 @@ var checkCmd = &cobra.Command{
 				ebike := status.NumBikesAvailableTypes[1].Ebike
 				lastReported := time.Since(time.Unix(status.LastReported, 0)).Round(time.Minute)
 
+				// Apply red color to zero values
+				mechanicalStr := fmt.Sprintf("%d", mechanical)
+				if mechanical == 0 {
+					mechanicalStr = text.FgRed.Sprint(mechanicalStr)
+				}
+
+				ebikeStr := fmt.Sprintf("%d", ebike)
+				if ebike == 0 {
+					ebikeStr = text.FgRed.Sprint(ebikeStr)
+				}
+
+				docksStr := fmt.Sprintf("%d", status.NumDocksAvailable)
+				if status.NumDocksAvailable == 0 {
+					docksStr = text.FgRed.Sprint(docksStr)
+				}
+
 				t.AppendRow(table.Row{
 					station.Name,
-					mechanical,
-					ebike,
-					status.NumDocksAvailable,
+					mechanicalStr,
+					ebikeStr,
+					docksStr,
 					lastReported.String(),
 				})
 			}
